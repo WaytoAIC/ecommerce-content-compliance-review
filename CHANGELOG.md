@@ -6,6 +6,16 @@ The format is intentionally simple and optimized for release notes and repositor
 
 ## [Unreleased]
 
+### Added
+
+- HTML companion report workflow for full compliance reviews.
+- Standard-library `scripts/render_html_report.py` renderer with source-image embedding and numbered hotspot annotations.
+- HTML report data template for image-based IP, trademark, and listing-scope risk reviews.
+
+### Changed
+
+- Updated install URLs and default installer repo to `WaytoAIC/ecommerce-content-compliance-review`.
+
 ## [v1.0.0] - 2026-03-27
 
 First public release.

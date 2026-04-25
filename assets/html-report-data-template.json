@@ -1,0 +1,105 @@
+{
+  "title": "电商内容合规审查报告",
+  "meta": {
+    "platform": "Amazon",
+    "market": "美国",
+    "content_type": "标题 / 五点 / 图片",
+    "category": "玩具配件",
+    "review_time": "YYYY-MM-DD"
+  },
+  "original_content": {
+    "title": "原始标题",
+    "bullets": [
+      "原始五点 1",
+      "原始五点 2"
+    ]
+  },
+  "overall": {
+    "level": "HIGH",
+    "summary": "一句话说明整体风险。",
+    "action": "是否建议上架，以及最关键的整改动作。"
+  },
+  "risk_counts": {
+    "HIGH": 0,
+    "MEDIUM": 0,
+    "LOW": 0,
+    "INFO": 0
+  },
+  "critical_points": [
+    {
+      "id": 1,
+      "title": "关键侵权点",
+      "description": "为什么这是核心风险。"
+    }
+  ],
+  "image": {
+    "path": "local-source-image.jpg",
+    "alt": "原始产品图",
+    "hotspots": [
+      {
+        "id": 1,
+        "label": "图上标注文案",
+        "x": 10,
+        "y": 10,
+        "width": 30,
+        "height": 20,
+        "style": "solid"
+      },
+      {
+        "id": 2,
+        "label": "虚线框标注文案",
+        "x": 0,
+        "y": 0,
+        "width": 100,
+        "height": 100,
+        "style": "dashed"
+      }
+    ],
+    "notes": [
+      {
+        "title": "1｜图片风险标题",
+        "description": "对应热点框的说明。"
+      }
+    ],
+    "action_required": "图片必须如何整改。"
+  },
+  "issues": [
+    {
+      "location": "标题 / 图片 / 五点",
+      "severity": "HIGH",
+      "problem": "具体问题。",
+      "recommendation": "具体整改建议。"
+    }
+  ],
+  "rewrite": {
+    "title": "合规标题",
+    "bullets": [
+      "合规五点 1",
+      "合规五点 2"
+    ],
+    "description": "合规产品描述"
+  },
+  "image_guidelines": {
+    "main": [
+      "主图整改要求"
+    ],
+    "secondary": [
+      "副图整改要求"
+    ]
+  },
+  "checklist": [
+    {
+      "item": "检查项",
+      "status": "未通过",
+      "severity": "HIGH",
+      "pass_standard": "通过标准"
+    }
+  ],
+  "sources": [
+    {
+      "label": "Amazon Product Detail Page Guide",
+      "url": "https://example.com/policy"
+    }
+  ],
+  "footer": "Generated for internal compliance review. This report is operational guidance, not legal advice."
+}

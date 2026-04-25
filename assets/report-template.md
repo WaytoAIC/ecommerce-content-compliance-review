@@ -1,6 +1,8 @@
 # 合规审查报告模板
 
 > 此模板为标准输出格式，skill 运行时按此结构生成报告
+>
+> 完整报告在可写工作区中应同步生成一份 HTML 可视化报告。HTML 数据结构见 `assets/html-report-data-template.json`，渲染脚本见 `scripts/render_html_report.py`。
 
 ---
 
@@ -96,6 +98,44 @@
 ```
 {{合规产品描述}}
 ```
+
+---
+
+### 🖼 HTML 可视化报告
+
+**HTML 文件：** `{{产品或主题 slug}}-compliance-review.html`
+
+**生成要求：**
+
+| 模块 | 必填条件 | 内容 |
+|------|----------|------|
+| 关键侵权点 | 完整报告必填 | 用 1-3 张高亮卡片列出最核心的 HIGH/MEDIUM 风险 |
+| 原图审查页 | 有图片或用户要求带图时必填 | 展示原图，并用编号热点框标出侵权/误导区域 |
+| 风险明细 | 必填 | 与 Markdown 报告一致，高风险行红底高亮 |
+| 合规改写 | 必填 | 输出安全标题、五点、描述 |
+| 图片整改底线 | 有图片风险时必填 | 分主图/副图说明必须如何改 |
+| 上架前检查清单 | 必填 | 列出通过标准，方便运营逐项核对 |
+| 参考依据 | 有来源时填写 | 平台政策、监管规则或内部规则库 |
+
+**生成步骤：**
+
+1. 将审查结果整理为 `assets/html-report-data-template.json` 同结构的 `report-data.json`。
+2. 如有原图，填入 `image.path`，并按百分比坐标填写 `image.hotspots`。
+3. 运行：
+
+```bash
+python3 scripts/render_html_report.py report-data.json -o {{产品或主题 slug}}-compliance-review.html
+```
+
+**热点框坐标说明：**
+
+| 字段 | 说明 |
+|------|------|
+| `x` | 距图片左侧百分比 |
+| `y` | 距图片顶部百分比 |
+| `width` | 框宽百分比 |
+| `height` | 框高百分比 |
+| `style` | `solid` 实线或 `dashed` 虚线 |
 
 ---
 

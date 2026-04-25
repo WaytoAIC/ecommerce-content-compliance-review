@@ -2,7 +2,7 @@
 
 set -eu
 
-REPO="restart2000/ecommerce-content-compliance-review"
+REPO="WaytoAIC/ecommerce-content-compliance-review"
 REF="main"
 SKILL_NAME="ecommerce-content-compliance-review"
 TARGET="auto"
@@ -23,7 +23,7 @@ Options:
   --target   Install target. auto|codex|openclaw. Default: auto
   --dest     Override the skills root directory. The script installs into DIR/ecommerce-content-compliance-review
   --ref      Branch or tag to install. Default: main
-  --repo     GitHub repo in OWNER/REPO form. Default: restart2000/ecommerce-content-compliance-review
+  --repo     GitHub repo in OWNER/REPO form. Default: WaytoAIC/ecommerce-content-compliance-review
   -h, --help Show this help
 EOF
 }

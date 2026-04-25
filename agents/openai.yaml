@@ -1,4 +1,4 @@
 interface:
   display_name: "跨境电商合规审查"
-  short_description: "审查跨境电商标题、描述、关键词与图文文案的合规风险"
-  default_prompt: "Use $ecommerce-content-compliance-review to review this ecommerce copy for platform, trademark, advertising, and cross-border compliance risks."
+  short_description: "审查跨境电商标题、描述、关键词与图文文案的合规风险，并可输出带图高亮 HTML 报告"
+  default_prompt: "Use $ecommerce-content-compliance-review to review this ecommerce copy for platform, trademark, advertising, and cross-border compliance risks. If a full report or image review is needed, also generate an HTML companion report."

@@ -4,3 +4,9 @@
 *.swp
 .env
 .env.*
+
+# Local generated reports and browser verification artifacts
+.playwright-mcp/
+*-compliance-review.html
+*-original-product-image.jpg
+*-page-check.png
