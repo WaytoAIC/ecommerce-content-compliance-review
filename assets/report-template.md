@@ -127,6 +127,21 @@
 python3 scripts/render_html_report.py report-data.json -o {{产品或主题 slug}}-compliance-review.html
 ```
 
+有原图或图片风险时必须启用自测：
+
+```bash
+python3 scripts/render_html_report.py report-data.json -o {{产品或主题 slug}}-compliance-review.html --require-image-audit
+```
+
+自测通过标准：
+
+| 检查项 | 通过标准 |
+|--------|----------|
+| 原图审查区 | HTML 含 `原图审查页：关键侵权点高亮` |
+| 图片 | HTML 含 `data:image/` 内嵌图或等效本地图 |
+| 热点框 | 至少 1 个 `.hotspot` |
+| 右侧说明 | 至少 1 个 `.audit-item` |
+
 **热点框坐标说明：**
 
 | 字段 | 说明 |

@@ -109,6 +109,12 @@ curl -fsSL https://raw.githubusercontent.com/WaytoAIC/ecommerce-content-complian
 python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html
 ```
 
+带图报告建议强制自测：
+
+```bash
+python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html --require-image-audit
+```
+
 ### 许可说明
 
 - 当前仓库是公开可见、可学习和可使用的 `source-available` 仓库
@@ -161,6 +167,12 @@ The bundled renderer uses only the Python standard library:
 
 ```bash
 python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html
+```
+
+For image-based reports, force the built-in validation:
+
+```bash
+python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html --require-image-audit
 ```
 
 ### License note

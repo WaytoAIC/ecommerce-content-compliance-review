@@ -197,6 +197,14 @@ Meilleur / Premier / Inégalé（法语）
 python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html
 ```
 
+带图报告必须启用自测：
+
+```bash
+python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html --require-image-audit
+```
+
+自测必须确认输出包含：`原图审查页：关键侵权点高亮`、内嵌图片、至少 1 个 `.hotspot`、至少 1 条右侧审查说明。若自测失败，不要交付 HTML，先补齐 `image.path`、`image.hotspots` 和 `image.notes`。
+
 如果图片是侵权风险核心，`image.hotspots` 至少标注：
 
 - 特定品牌/IP 外观或 logo 露出

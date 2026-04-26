@@ -438,16 +438,42 @@ def render_html(data: dict[str, Any], base_dir: Path) -> str:
 """
 
 
+def validate_image_audit(html_text: str) -> dict[str, int]:
+    checks = {
+        "image_audit_sections": html_text.count("原图审查页：关键侵权点高亮"),
+        "embedded_images": html_text.count("data:image/"),
+        "hotspots": html_text.count('class="hotspot'),
+        "audit_items": html_text.count('class="audit-item'),
+    }
+    missing = [name for name, count in checks.items() if count < 1]
+    if missing:
+        details = ", ".join(f"{name}={checks[name]}" for name in sorted(checks))
+        raise SystemExit(f"HTML image audit validation failed: missing {', '.join(missing)} ({details})")
+    return checks
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Render a compliance review JSON file into HTML.")
     parser.add_argument("input_json", help="Path to the report JSON file")
     parser.add_argument("-o", "--output", help="Output HTML path")
+    parser.add_argument(
+        "--require-image-audit",
+        action="store_true",
+        help="Fail if the rendered HTML does not include the source-image audit section, embedded image, hotspots, and audit notes.",
+    )
     args = parser.parse_args()
 
     input_path = Path(args.input_json).resolve()
     data = json.loads(input_path.read_text(encoding="utf-8"))
     output_path = Path(args.output).resolve() if args.output else input_path.with_suffix(".html")
-    output_path.write_text(render_html(data, input_path.parent), encoding="utf-8")
+    html_text = render_html(data, input_path.parent)
+    if args.require_image_audit:
+        checks = validate_image_audit(html_text)
+        print(
+            "Image audit validation passed: "
+            + ", ".join(f"{name}={count}" for name, count in sorted(checks.items()))
+        )
+    output_path.write_text(html_text, encoding="utf-8")
     print(f"Wrote HTML report: {output_path}")
 
 
