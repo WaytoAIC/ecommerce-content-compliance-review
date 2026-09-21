@@ -175,8 +175,13 @@ For image-based reports, force the built-in validation:
 python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html --require-image-audit
 ```
 
-### License note
+### License
 
-- This repository is public and source-available
-- Commercial use is not allowed by default
-- Public redistribution or derivative distribution must keep the same license set and publish the corresponding source code
+Licensed under the [Apache License 2.0](./LICENSE). Copyright 2026 Wesley Zane.
+
+- Commercial use, modification, redistribution and closed-source derivatives are all permitted
+- You must retain the copyright and license notices, and state significant changes you make
+- The license grants an express patent license from contributors
+
+Before 2026-09-21 this project was distributed under PolyForm Noncommercial 1.0.0 with additional
+non-commercial terms. Those terms are superseded — see [NOTICE](./NOTICE).

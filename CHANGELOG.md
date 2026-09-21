@@ -6,7 +6,17 @@ The format is intentionally simple and optimized for release notes and repositor
 
 ## [Unreleased]
 
+### Changed
+
+- **License changed from PolyForm Noncommercial 1.0.0 (plus non-commercial additional terms) to Apache License 2.0.**
+  Commercial use is now permitted; derivatives no longer have to be published as source. Added `NOTICE`
+  recording the change; removed `LICENSE.md` and `ADDITIONAL_TERMS.md`, replaced by `LICENSE`.
+
 ### Added
+- Tiered detection routing: zero-dependency rule-based review by default, automatic escalation to image/patent data sources when credentials are present.
+- `scripts/detect_capabilities.py` — credential probe that reports availability only and never prints secret values.
+- `references/escalation.md` — triage table, endpoint/pricing reference, and discipline for paid IP data channels.
+- Mandatory detection-coverage statement in every report, stating what was and was not checked.
 
 - HTML companion report workflow for full compliance reviews.
 - Standard-library `scripts/render_html_report.py` renderer with source-image embedding and numbered hotspot annotations.
