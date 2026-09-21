@@ -253,13 +253,17 @@ Meilleur / Premier / Inégalé（法语）
 python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html
 ```
 
-带图报告必须启用自测：
+交付前必须跑自测。带图报告加 `--require-image-audit`，所有报告都应加 `--require-coverage`：
 
 ```bash
-python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html --require-image-audit
+python3 scripts/render_html_report.py report-data.json -o product-compliance-review.html \
+  --require-image-audit --require-coverage
 ```
 
-自测必须确认输出包含：`原图审查页：关键侵权点高亮`、内嵌图片、至少 1 个 `.hotspot`、至少 1 条右侧审查说明。若自测失败，不要交付 HTML，先补齐 `image.path`、`image.hotspots` 和 `image.notes`。
+- **图片自测**确认输出包含：`原图审查页：关键侵权点高亮`、内嵌图片、至少 1 个 `.hotspot`、至少 1 条右侧审查说明。失败时先补齐 `image.path`、`image.hotspots` 和 `image.notes`。
+- **覆盖声明自测**确认 `coverage` 对象含 `path`、`checked`、`not_checked` 三项。缺失即报错退出——不加 `--require-coverage` 时不会失败，但 HTML 会带一条醒目的「本报告未声明检测覆盖范围」警示条，并提示不得作为决策依据。
+
+两项自测都失败即不要交付 HTML。
 
 如果图片是侵权风险核心，`image.hotspots` 至少标注：
 

@@ -11,6 +11,7 @@ import argparse
 import base64
 import html
 import json
+import sys
 import mimetypes
 from pathlib import Path
 from typing import Any
@@ -258,6 +259,47 @@ def render_checklist(checklist: list[dict[str, Any]]) -> str:
     </section>"""
 
 
+def render_coverage(coverage: dict[str, Any]) -> str:
+    """检测覆盖声明。缺失时输出醒目警示条，而不是静默省略——
+    一份没声明覆盖范围的合规报告会被当成安全证明。"""
+    if not coverage:
+        return """
+    <section class="section coverage-missing">
+      <h2>检测覆盖声明</h2>
+      <p><strong>本报告未声明检测覆盖范围。</strong>无法据此判断哪些风险面已核验、哪些未核验，
+      不得作为上架或采购决策的依据。请补充 <code>coverage</code> 字段后重新生成。</p>
+    </section>"""
+
+    path = esc(coverage.get("path", "未注明"))
+    checked = as_list(coverage.get("checked"))
+    not_checked = as_list(coverage.get("not_checked"))
+    checked_html = "".join(f"<li>{esc(x)}</li>" for x in checked) or "<li>未注明</li>"
+    not_checked_html = "".join(f"<li>{esc(x)}</li>" for x in not_checked) or "<li>未注明</li>"
+    cost = coverage.get("cost")
+    cost_html = f'<p class="coverage-cost">本次数据源调用花费：{esc(cost)}</p>' if cost else ""
+    caveat = coverage.get(
+        "caveat",
+        "查不到不等于安全：在审未公开的专利、刚受理的商标、未入库的版权登记，任何一档都看不见。",
+    )
+    return f"""
+    <section class="section">
+      <h2>检测覆盖声明</h2>
+      <p><strong>本次路径：</strong>{path}</p>
+      <div class="coverage-grid">
+        <div class="coverage-col">
+          <h3>已核验</h3>
+          <ul>{checked_html}</ul>
+        </div>
+        <div class="coverage-col coverage-gap">
+          <h3>未覆盖</h3>
+          <ul>{not_checked_html}</ul>
+        </div>
+      </div>
+      {cost_html}
+      <p class="coverage-caveat">{esc(caveat)}</p>
+    </section>"""
+
+
 def render_sources(sources: list[dict[str, Any]]) -> str:
     if not sources:
         return ""
@@ -379,6 +421,13 @@ def render_html(data: dict[str, Any], base_dir: Path) -> str:
     .callout {{ border-radius: 8px; padding: 14px 16px; border: 1px solid var(--line); background: var(--panel); }}
     .source-list a {{ color: var(--info); text-decoration: none; }}
     .source-list a:hover {{ text-decoration: underline; }}
+    .coverage-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; }}
+    .coverage-col h3 {{ font-size: 13px; margin: 0 0 6px; }}
+    .coverage-col ul {{ margin: 0; padding-left: 18px; }}
+    .coverage-gap h3 {{ color: var(--high); }}
+    .coverage-cost {{ margin-top: 12px; font-size: 13px; color: var(--muted); }}
+    .coverage-caveat {{ margin-top: 12px; padding: 10px 12px; border-left: 3px solid var(--high); background: rgba(200,40,40,.06); font-size: 13px; }}
+    .coverage-missing {{ border: 2px solid var(--high); }}
     .footer {{ margin-top: 18px; color: var(--muted); font-size: 12px; text-align: center; }}
     @media (max-width: 860px) {{
       .page {{ width: min(100% - 24px, 1180px); margin-top: 16px; }}
@@ -429,6 +478,7 @@ def render_html(data: dict[str, Any], base_dir: Path) -> str:
     {render_rewrite(data.get("rewrite", {}))}
     {render_image_guidelines(data.get("image_guidelines", {}))}
     {render_checklist(as_list(data.get("checklist")))}
+    {render_coverage(data.get("coverage", {}))}
     {render_sources(as_list(data.get("sources")))}
 
     <p class="footer">{esc(data.get("footer", "Generated for internal compliance review. This report is operational guidance, not legal advice."))}</p>
@@ -452,6 +502,24 @@ def validate_image_audit(html_text: str) -> dict[str, int]:
     return checks
 
 
+def validate_coverage(data: dict[str, Any], html_text: str) -> dict[str, int]:
+    coverage = data.get("coverage") or {}
+    if not coverage:
+        raise SystemExit(
+            "Coverage validation failed: the report declares no detection coverage. "
+            "Add a `coverage` object with `path`, `checked` and `not_checked` before delivering. "
+            "A compliance report without a coverage statement gets read as proof of safety."
+        )
+    missing = [f for f in ("path", "checked", "not_checked") if not coverage.get(f)]
+    if missing:
+        raise SystemExit(f"Coverage validation failed: missing {', '.join(missing)} in `coverage`.")
+    return {
+        "checked_items": len(as_list(coverage.get("checked"))),
+        "not_checked_items": len(as_list(coverage.get("not_checked"))),
+        "caveat_present": int("查不到不等于安全" in html_text or bool(coverage.get("caveat"))),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Render a compliance review JSON file into HTML.")
     parser.add_argument("input_json", help="Path to the report JSON file")
@@ -460,6 +528,11 @@ def main() -> None:
         "--require-image-audit",
         action="store_true",
         help="Fail if the rendered HTML does not include the source-image audit section, embedded image, hotspots, and audit notes.",
+    )
+    parser.add_argument(
+        "--require-coverage",
+        action="store_true",
+        help="Fail if the report has no detection-coverage statement (path / checked / not_checked).",
     )
     args = parser.parse_args()
 
@@ -472,6 +545,18 @@ def main() -> None:
         print(
             "Image audit validation passed: "
             + ", ".join(f"{name}={count}" for name, count in sorted(checks.items()))
+        )
+    if args.require_coverage:
+        cov = validate_coverage(data, html_text)
+        print(
+            "Coverage validation passed: "
+            + ", ".join(f"{name}={count}" for name, count in sorted(cov.items()))
+        )
+    elif not data.get("coverage"):
+        print(
+            "Warning: no `coverage` statement in this report; "
+            "the HTML will carry a visible 'coverage not declared' banner.",
+            file=sys.stderr,
         )
     output_path.write_text(html_text, encoding="utf-8")
     print(f"Wrote HTML report: {output_path}")
