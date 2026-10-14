@@ -4,10 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is intentionally simple and optimized for release notes and repository readers.
 
-## [Unreleased]
+## [1.1.0] - 2026-10-14
 
 ### Changed
 
+- `scripts/detect_capabilities.py` now reads credentials from environment variables only and no longer
+  looks at a local secrets file — the TroHub and LinkFox clients only read environment variables, so a key
+  that lives only in a file would have been reported as usable when it is not.
 - **License changed from PolyForm Noncommercial 1.0.0 (plus non-commercial additional terms) to Apache License 2.0.**
   Commercial use is now permitted; derivatives no longer have to be published as source. Added `NOTICE`
   recording the change; removed `LICENSE.md` and `ADDITIONAL_TERMS.md`, replaced by `LICENSE`.

@@ -46,7 +46,7 @@
 
 ### TroHub（凭据 `TROHUB_API_KEY`）
 
-客户端按 trohub-ip-check 自身的约定读取凭据，通常不需要手动 export。
+客户端从环境变量读取凭据：调用前先在终端 `export TROHUB_API_KEY=...`（你用的客户端版本要求的话，再设 `TROHUB_BASE_URL`）。
 
 ```bash
 python3 <trohub-ip-check skill 目录>/scripts/trohub_client.py check-image \

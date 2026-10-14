@@ -9,6 +9,8 @@
 用法：
     python3 scripts/detect_capabilities.py           # 人读的表格
     python3 scripts/detect_capabilities.py --json    # 机读的 JSON
+
+凭据只认环境变量：TroHub、LinkFox 的客户端都从环境变量取 key，写在文件里它们读不到。
 """
 
 from __future__ import annotations
@@ -18,8 +20,6 @@ import json
 import os
 import sys
 from pathlib import Path
-
-SECRETS = Path.home() / ".config" / "ai-hub" / "secrets.env"
 
 # LinkFox 厂商 skill 仓（睿观各路走它的脚本）。装在别处时用 LINKFOX_SKILLS_DIR 指定。
 LINKFOX_SKILL_DIRS = [
@@ -35,33 +35,11 @@ TROHUB_SKILL_DIRS = [
 ]
 
 
-def read_secret_names() -> set[str]:
-    """读出 secrets.env 里定义了哪些变量名——只要名字，不取值。"""
-    names: set[str] = set()
-    if not SECRETS.is_file():
-        return names
-    try:
-        for line in SECRETS.read_text(encoding="utf-8", errors="ignore").splitlines():
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            name = line.split("=", 1)[0].removeprefix("export ").strip()
-            if name:
-                names.add(name)
-    except OSError:
-        pass
-    return names
-
-
 def has_credential(*candidates: str) -> tuple[bool, str | None]:
-    """凭据是否可得。返回 (是否存在, 来源)，不返回值本身。"""
-    declared = read_secret_names()
+    """凭据是否可得（只看环境变量）。返回 (是否存在, 来源)，不返回值本身。"""
     for name in candidates:
         if os.environ.get(name):
             return True, f"环境变量 {name}"
-    for name in candidates:
-        if name in declared:
-            return True, f"secrets.env 的 {name}"
     return False, None
 
 
@@ -109,7 +87,7 @@ def detect() -> dict:
             "名称": "智慧芽专利深核（直连 MCP）",
             "覆盖": ["专利法律状态", "权利要求", "同族", "是否失效"],
             "可用": None,  # MCP 由 harness 提供，脚本探测不到，运行时按工具是否存在判断
-            "凭据": "由 MCP 提供，不读 secrets.env",
+            "凭据": "由 MCP 提供",
             "入口": "mcp__zhihuiya-patent__*",
             "单价": "不耗 LinkFox 积分",
             "限流": "见各自套餐",
@@ -120,7 +98,7 @@ def detect() -> dict:
             "名称": "卖家精灵在册商标兜底（直连 MCP）",
             "覆盖": ["在册文字商标"],
             "可用": None,
-            "凭据": "由 MCP 提供，不读 secrets.env",
+            "凭据": "由 MCP 提供",
             "入口": "mcp__sellersprite-mcp__trademark_*",
             "单价": "走已购配额",
             "限流": "见各自套餐",

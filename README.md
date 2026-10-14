@@ -47,7 +47,7 @@ curl -fsSL https://raw.githubusercontent.com/WaytoAIC/ecommerce-content-complian
 
 ```bash
 # Version-pinned
-curl -fsSL https://raw.githubusercontent.com/WaytoAIC/ecommerce-content-compliance-review/v1.0.0/install.sh | bash -s -- --target codex --ref v1.0.0 --repo WaytoAIC/ecommerce-content-compliance-review
+curl -fsSL https://raw.githubusercontent.com/WaytoAIC/ecommerce-content-compliance-review/v1.1.0/install.sh | bash -s -- --target codex --ref v1.1.0 --repo WaytoAIC/ecommerce-content-compliance-review
 ```
 
 复制即用。安装后重启 Codex / OpenClaw。
@@ -117,9 +117,13 @@ python3 scripts/render_html_report.py report-data.json -o product-compliance-rev
 
 ### 许可说明
 
-- 当前仓库是公开可见、可学习和可使用的 `source-available` 仓库
-- 默认不允许商用
-- 如果你基于本仓库进行修改、二次分发或合并进更大的功能并对外提供，需要公开对应源码
+本 skill 按 [Apache License 2.0](./LICENSE) 授权，版权所有 2026 Wesley Zane。
+
+- 可以商用，可以修改、再分发，改完的版本可以不开源
+- 要保留原来的版权声明和许可声明（含 [NOTICE](./NOTICE)），改过的文件要注明是你改的
+- 许可里附带贡献者给的专利授权
+
+2026-09-21 起由 PolyForm Noncommercial 改为 Apache-2.0，原来「不许商用、改了要公开源码」的条款作废，见 [NOTICE](./NOTICE)。
 
 ---
 
@@ -180,7 +184,7 @@ python3 scripts/render_html_report.py report-data.json -o product-compliance-rev
 Licensed under the [Apache License 2.0](./LICENSE). Copyright 2026 Wesley Zane.
 
 - Commercial use, modification, redistribution and closed-source derivatives are all permitted
-- You must retain the copyright and license notices, and state significant changes you make
+- You must retain the copyright and license notices, and mark any files you modify as changed
 - The license grants an express patent license from contributors
 
 Before 2026-09-21 this project was distributed under PolyForm Noncommercial 1.0.0 with additional
